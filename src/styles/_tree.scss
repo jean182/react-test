@@ -1,0 +1,117 @@
+.tree {
+  background-color: $yellow-100;
+  @include media-breakpoint-down(lg) {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+.tree ul {
+  position: relative;
+  padding: 2em 0;
+  white-space: nowrap;
+  margin: 0 auto;
+  text-align: center;
+  &::after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+.tree li {
+  display: inline-block;
+  vertical-align: top;
+  text-align: center;
+  list-style-type: none;
+  position: relative;
+  padding: 2em 0.5em 0 0.5em;
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 50%;
+    border-top: $border-width solid $green-900;
+    width: 50%;
+    height: 2em;
+  }
+  &::after {
+    right: auto;
+    left: 50%;
+    border-left: $border-width solid $green-900;
+  }
+  &:only-child::after,
+  &:only-child::before {
+    display: none;
+  }
+  &:only-child {
+    padding-top: 0;
+  }
+  &:first-child::before,
+  &:last-child::after {
+    border: 0 none;
+  }
+  &:last-child::before {
+    border-right: $border-width solid $green-900;
+    border-radius: 0 5px 0 0;
+  }
+  &:first-child::after {
+    border-radius: 5px 0 0 0;
+  }
+}
+
+.tree ul ul::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  border-left: $border-width solid $green-900;
+  width: 0;
+  height: 2em;
+}
+
+.tree li span {
+  border: $border-width solid $green-900;
+  padding: 0.5em 0.75em;
+  text-decoration: none;
+  text-transform: uppercase;
+  display: inline-block;
+  border-radius: 5px;
+  color: #333;
+  position: relative;
+  top: $border-width;
+}
+
+.tree .subtree span,
+.tree .subtree span + ul li a {
+  background: $green-400;
+  border: 2px solid $green-400;
+}
+
+.tree .subtree span + ul li::after,
+.tree .subtree span + ul li::before,
+.tree .subtree span + ul::before,
+.tree .subtree span + ul ul::before {
+  border-color: $green-400;
+  border-width: 2px;
+}
+
+.tree li span:hover,
+.tree li span:hover + ul li a {
+  background: $cyan-200;
+  border: $border-width solid $cyan-200;
+}
+
+.tree li span:hover + ul li::after,
+.tree li span:hover + ul li::before,
+.tree li span:hover + ul::before,
+.tree li span:hover + ul ul::before,
+.tree li .subtree span:hover + ul li::after,
+.tree li .subtree span:hover + ul li::before,
+.tree li .subtree span:hover + ul::before,
+.tree li .subtree span:hover + ul ul::before {
+  border-color: $cyan-200;
+  border-width: 4px;
+}

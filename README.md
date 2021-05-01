@@ -1,46 +1,64 @@
-# Getting Started with Create React App
+# Binary Tree Viewer
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project allows the user to upload a JSON file with a valid array structure and returns a binary tree in two different outputs:
 
-## Available Scripts
+## Data Structure
 
-In the project directory, you can run:
+Given an array with this shape `[id, leftChild, rightChild]` we need to transform it to an object with this structure:
 
-### `yarn start`
+```ts
+interface BinTreeNode {
+  id: number | string
+  left?: BinTreeNode | null
+  right?: BinTreeNode | null
+}
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+The interface as you can see is slightly different than the one in the test document provided, I decided to allow the left and right property undefined and nullable as well, this enhancement was done in order to match the example provided in the document:
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+```json
+{
+  "id": 1,
+  "left": {
+    "id": 2
+  },
+  "right": {
+    "id": 3,
+    "left": null,
+    "right": {
+      "id": 5
+    }
+  }
+}
+```
 
-### `yarn test`
+_As you can see the right and left fields are not always in present in the BinTreeNode and the left/right can be null as well._
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+I also decided to go with a functional approach, so all the data handling is on the src/tree folder, and they're mostly functions to validate and parse the data.
 
-### `yarn build`
+## UI
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+For the UI I decided to go simple and use an UI library for the layout, in this case I'm using bootstrap and some custom scss located in `src/styles`. I normally use styled components but I think bootstrap allows to build the UI quick and fast, without compromising responsiveness and a11y.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Also I'm using function based components with hooks which is different than the class based approach on the `mobx-react-test-master`, I decided to go with this approach without any particular reason, I just enjoy to write code using react hooks.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The form is using react-hook-form to handle the form state and validation, it makes working with forms way easier and speed up the proccess of writing forms.
 
-### `yarn eject`
+As a **bonus** for the form I added the following:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- A clear button, to make it easier to try a new file.
+- Labels to each form input.
+- Form validation with error messages.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+For the output area I change the whole layout to make it look more like a binary tree without losing any of the solutions to the given problems in the doc.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+The site is fully responsive, the binary tree container is horizontally scrollable if the device is less than the `lg` bootstrap breakpoint `992px`.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Misc
 
-## Learn More
+Last but not least there's a constants folder `src/constants` which has some variables for error messages. I added a header and a footer to improve the layout.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+<!-- ## Screenshots
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+###
+![alt text](https://github.com/[username]/[reponame]/blob/[branch]/image.jpg?raw=true) -->

@@ -1,0 +1,44 @@
+{
+  "id": "a",
+  "left": {
+    "id": "b",
+    "left": {
+      "id": "b1"
+    },
+    "right": {
+      "id": "b2",
+      "left": {
+        "id": "b21"
+      },
+      "right": {
+        "id": "b22"
+      }
+    }
+  },
+  "right": {
+    "id": "c",
+    "left": {
+      "id": "c1",
+      "left": {
+        "id": "c11",
+        "left": {
+          "id": "c111"
+        }
+      },
+      "right": {
+        "id": "c12",
+        "left": null,
+        "right": {
+          "id": "c121"
+        }
+      }
+    },
+    "right": {
+      "id": "c2",
+      "left": null,
+      "right": {
+        "id": "c21"
+      }
+    }
+  }
+}
