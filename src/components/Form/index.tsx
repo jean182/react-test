@@ -30,12 +30,10 @@ export default function Form({ setBinaryTree }: Props) {
   const textAreaLength = fileValue ? countItems(fileValue) * 3 : 4
 
   React.useEffect(() => {
-    if (fileValue) {
-      if (validateFileContent(fileValue)) {
-        const tree = transformArrayToBinaryTree(fileValue)
-        setValue("objectView", JSON.stringify(tree, null, 2))
-        trigger("objectView")
-      }
+    if (fileValue && validateFileContent(fileValue)) {
+      const tree = transformArrayToBinaryTree(fileValue)
+      setValue("objectView", JSON.stringify(tree, null, 2))
+      trigger("objectView")
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fileValue])
@@ -43,9 +41,7 @@ export default function Form({ setBinaryTree }: Props) {
   const onFileUpload = (content: string) => {
     try {
       const parsedData = JSON.parse(content)
-      if (validateFileContent(parsedData)) {
-        setFileValue(parsedData)
-      }
+      setFileValue(parsedData)
     } catch (error) {
       console.error(error)
     }
@@ -53,8 +49,8 @@ export default function Form({ setBinaryTree }: Props) {
 
   const handleFileRead = async () => {
     const content = await getFileText(getValues("fileToRead"))
-    trigger("fileToRead")
-    if (content) {
+    const validFile = await trigger("fileToRead")
+    if (content && validFile) {
       onFileUpload(content)
     }
   }
