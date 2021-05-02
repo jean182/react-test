@@ -1,41 +1,47 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { ErrorMessage } from "@hookform/error-message"
+import isEqual from "lodash.isequal"
 import React from "react"
 import { useForm } from "react-hook-form"
 
-import { ERRORS } from "../../constants"
-import { countItems, transformArrayToBinaryTree } from "../../tree"
+import { ERRORS, MESSAGES } from "../../constants"
+import BinaryTree from "../../tree"
 import InputFile from "../InputFile"
+
 import {
+  countItems,
   getFileText,
   validateFileContent,
   validateTextArea,
 } from "./Form.handlers"
-
 import { BinaryTreeFormInput, Props } from "./Form.interfaces"
 
-export default function Form({ setBinaryTree }: Props) {
+export default function Form({ binaryTree, setBinaryTree }: Props) {
   const {
     formState: { errors },
-    getValues,
     handleSubmit,
     register,
     reset,
     setValue,
     trigger,
+    watch,
   } = useForm<BinaryTreeFormInput>()
   const [fileValue, setFileValue] = React.useState<Array<
     number | number[]
   > | null>(null)
 
   const textAreaLength = fileValue ? countItems(fileValue) * 3 : 4
+  const currentFile = watch("fileToRead")
 
   React.useEffect(() => {
     if (fileValue && validateFileContent(fileValue)) {
-      const tree = transformArrayToBinaryTree(fileValue)
-      setValue("objectView", JSON.stringify(tree, null, 2))
+      const btInstance = new BinaryTree(fileValue)
+      setValue("objectView", JSON.stringify(btInstance.root, null, 2))
       trigger("objectView")
+      if (!isEqual(btInstance.root, binaryTree)) {
+        setBinaryTree(null)
+      }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fileValue])
 
   const onFileUpload = (content: string) => {
@@ -48,16 +54,18 @@ export default function Form({ setBinaryTree }: Props) {
   }
 
   const handleFileRead = async () => {
-    const content = await getFileText(getValues("fileToRead"))
-    const validFile = await trigger("fileToRead")
-    if (content && validFile) {
-      onFileUpload(content)
+    const content = await getFileText(currentFile)
+    if (content) {
+      const validFile = await trigger("fileToRead")
+      if (validFile) {
+        onFileUpload(content)
+      }
     }
   }
 
-  const onSubmit = (data: BinaryTreeFormInput) => {
-    setBinaryTree(JSON.parse(data.objectView))
-  }
+  React.useEffect(() => {
+    handleFileRead()
+  }, [currentFile])
 
   const clearForm = () => {
     reset()
@@ -65,32 +73,25 @@ export default function Form({ setBinaryTree }: Props) {
     setFileValue(null)
   }
 
+  const onSubmit = (data: BinaryTreeFormInput) => {
+    const btInstance = new BinaryTree()
+    btInstance.root = JSON.parse(data.objectView)
+    setBinaryTree(btInstance)
+  }
+
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      id="binaryTreeForm"
-      className="row g-3 my-3"
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="row g-3 my-3">
       <div className="col-12">
         <InputFile
           errors={errors}
           id="fileToRead"
-          label="Tree Source"
+          label={MESSAGES.INPUT_FILE_LABEL}
           register={register}
           placeholder="Please upload a valid JSON file."
         />
       </div>
       <div className="col-12">
-        <button
-          type="button"
-          onClick={handleFileRead}
-          className="btn btn-primary"
-        >
-          Fetch
-        </button>
-      </div>
-      <div className="col-12">
-        <label htmlFor="objectView">Object View</label>
+        <label htmlFor="objectView">{MESSAGES.TEXTAREA_LABEL}</label>
         <div className="input-group has-validation">
           <textarea
             className={"form-control".concat(
@@ -98,6 +99,7 @@ export default function Form({ setBinaryTree }: Props) {
             )}
             id="objectView"
             rows={textAreaLength}
+            placeholder={MESSAGES.TEXTAREA_PLACEHOLDER}
             {...register("objectView", {
               required: { message: ERRORS.REQUIRED_FIELD, value: true },
               validate: (value) => validateTextArea(value),
@@ -107,7 +109,7 @@ export default function Form({ setBinaryTree }: Props) {
             errors={errors}
             name="objectView"
             render={({ message }: { message: string }) => (
-              <div className="invalid-feedback">
+              <div className="invalid-feedback" role="alert">
                 {message ?? ERRORS.INVALID_JSON}
               </div>
             )}
@@ -115,15 +117,19 @@ export default function Form({ setBinaryTree }: Props) {
         </div>
       </div>
       <div className="col-12">
-        <button
+        <input
           type="submit"
           className="btn btn-success me-3"
-          form="binaryTreeForm"
+          value={MESSAGES.BTN_SUBMIT_LABEL}
+          title={MESSAGES.BTN_SUBMIT_TITLE}
+        />
+        <button
+          type="button"
+          className="btn btn-danger me-3"
+          onClick={clearForm}
+          title={MESSAGES.BTN_CLEAR_TITLE}
         >
-          Process
-        </button>
-        <button type="button" className="btn btn-danger" onClick={clearForm}>
-          Clear
+          {MESSAGES.BTN_CLEAR_LABEL}
         </button>
       </div>
     </form>

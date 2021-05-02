@@ -1,4 +1,4 @@
-import { BinTreeNode } from "../../tree/tree.interfaces"
+import BinaryTree from "../../tree"
 
 export interface BinaryTreeFormInput {
   fileToRead: File[]
@@ -6,6 +6,6 @@ export interface BinaryTreeFormInput {
 }
 
 export interface Props {
-  binaryTree: BinTreeNode | null
-  setBinaryTree: React.Dispatch<React.SetStateAction<BinTreeNode | null>>
+  binaryTree: BinaryTree | null
+  setBinaryTree: (btInstance: BinaryTree | null) => void
 }

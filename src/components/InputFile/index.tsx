@@ -21,7 +21,7 @@ export default function InputFile({
             errors.fileToRead ? " is-invalid" : ""
           )}
           {...register("fileToRead", {
-            required: { message: ERRORS.REQUIRED_FIELD, value: true },
+            required: false,
             validate: (value) => validateNewFile(value),
           })}
           id={id}

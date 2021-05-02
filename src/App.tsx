@@ -2,14 +2,18 @@ import React from "react"
 
 import Form from "./components/Form"
 import Layout from "./components/Layout"
-import Tree from "./components/Tree"
+import TreeView from "./components/TreeView"
 
 import "./styles/main.scss"
 
-import { BinTreeNode } from "./tree/tree.interfaces"
+import BinaryTree from "./tree"
 
 function App() {
-  const [binaryTree, setBinaryTree] = React.useState<BinTreeNode | null>(null)
+  const [binaryTree, setBinaryTree] = React.useState<BinaryTree | null>(null)
+
+  const changeBinaryTree = (btInstance: BinaryTree | null) => {
+    setBinaryTree(btInstance)
+  }
 
   return (
     <Layout>
@@ -24,8 +28,8 @@ function App() {
           interactive way.
         </p>
 
-        <Form binaryTree={binaryTree} setBinaryTree={setBinaryTree} />
-        {binaryTree && <Tree binaryTree={binaryTree} />}
+        <Form binaryTree={binaryTree} setBinaryTree={changeBinaryTree} />
+        {binaryTree && <TreeView binaryTree={binaryTree} />}
       </div>
     </Layout>
   )

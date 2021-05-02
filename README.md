@@ -32,7 +32,7 @@ interface BinTreeNode {
 }
 ```
 
-The interface as you can see is slightly different than the one in the test document provided, I decided to allow the left and right property undefined and nullable as well, this enhancement was done in order to match the example provided in the document:
+The interface as you can see is slightly different than the one in the test document provided, I decided to allow the left and right property be undefined and nullable as well, this enhancement was done in order to match the example provided in the document:
 
 ```json
 {
@@ -50,9 +50,9 @@ The interface as you can see is slightly different than the one in the test docu
 }
 ```
 
-_As you can see the right and left fields are not always in present in the BinTreeNode and the left/right can be null as well._
+_As you can see the right and left fields are not always present in the BinTreeNode and the left/right can be null as well._
 
-I also decided to go with a functional approach, so all the data handling is on the `src/tree` folder (the main function to transform the array to the tree is in `src/tree/parse.ts`), and they're mostly functions to validate and parse the data.
+I also decided to go with a class based approach for handling the structure, that is on the `src/tree/index.ts` file.
 
 ## UI (Solution 2)
 
@@ -62,29 +62,35 @@ Also I'm using function based components with hooks which is different than the 
 
 In the `src/components/Form/` is located every file related to the form functionality.
 
-The Binary Tree Output is located in `src/components/Tree/`
+The Binary Tree Output is located in `src/components/TreeView/`
 
 Other than that the rest of the components are for displaying the UI.
 
 The form is using react-hook-form to handle the form state and validation, it makes working with forms way easier and speed up the proccess of writing forms.
 
-**You must press the Process button to generate a new binary tree output, this is in order to make the process button do something because the requirements didn't use it at all.**
+For the output area everything should be doing what is supposed to, functionality regarding subtrees and displaying the data.
 
-As a **bonus** for the form I added the following:
+As a **bonus** I added the following:
 
 - A clear button, to make it easier to try a new file.
 - Labels to each form input.
 - Form validation with error messages.
+- The output layout was changed to look like a binary tree without losing any of the required functionality;
+- Hover on a node will highlight all it's childs.
+- The site is fully responsive, the binary tree container is horizontally scrollable if the device is less than the `lg` bootstrap breakpoint `992px`.
+- Unit testing the components using react testing library.
 
-For the output area I change the whole layout to make it look more like a binary tree without losing any of the solutions to the given problems in the doc.
+### Notes
 
-The site is fully responsive, the binary tree container is horizontally scrollable if the device is less than the `lg` bootstrap breakpoint `992px`.
+- I removed the Fetch button, the requirements did not mention it and the validation is still working as expected without it (the UI flow is more user friendly IMHO).
+- The file upload file is not required, it will be validated only if you upload one file(So the user can test inputs without uploading something).
+- You must press the Process button to generate a binary tree output. When you upload a valid file and there's already an output, the output will be cleared and you will need to submit the new one. I find this as a valid approach because since the user can edit the text area I believe that if a new structure is added the user should be able to confirm (by submitting) if they want to generate a new output.
 
 ## Smallest subtree (Solution 3)
 
-For the UI since I'm displaying the output in a different way I used a background-color green for coloring the smallest subtree and its nodes (if any), all the other nodes should be using the default background.
+For the UI since I'm displaying the output in a different way I used a background-color green for coloring the smallest subtree and its nodes (if any), all the other nodes should be using the default background and default border.
 
-The function that calculates the subtree is located in `src/tree/subtree.ts`
+The function that calculates the subtree is located in `src/tree/index.ts`, it is a class that does all the binary structure handling.
 
 ## Misc
 
@@ -97,6 +103,7 @@ Also there's some json files to try out in `src/data` if you want to test the bi
 ## Screenshots
 
 ### Layout
+
 ![Layout](https://github.com/jean182/react-test/blob/main/src/screenshots/empty-layout.png?raw=true)
 
 ### Form and Output
@@ -106,10 +113,6 @@ Also there's some json files to try out in `src/data` if you want to test the bi
 ### Form Errors
 
 ![Form Errors](https://github.com/jean182/react-test/blob/main/src/screenshots/form-errors.png?raw=true)
-
-### Invalid File Error
-
-![Invalid File Error](https://github.com/jean182/react-test/blob/main/src/screenshots/invalid-file.png?raw=true)
 
 ### Output
 
@@ -125,13 +128,11 @@ Also there's some json files to try out in `src/data` if you want to test the bi
 
 ## Final Thoughts
 
-I really enjoy making this test, it was a pretty nice challenge to work with binary trees and render them using recursion and also working with different data structures to get the desired results.
+I really enjoy making this test, it was a pretty nice challenge to work with binary trees and render them using recursion (because normally you work with iterations).
 
-I did not add unit tests given the time allowed to do the test, but it would be ideal to have some.
+I did add unit tests for both the data structure and the components.
 
 I just add prettier to format the code, with a few basic rules, I did not add eslint even though it would be ideal as well.
-
-I was planning to add aliases to the project to make imports nicer but I didn't for time concerns.
 
 I didn't include a global state manager because I thought the scope of the app was very litle so I decided to do the state management using react `useState` hook and `react-hook-form` form state handling.
 

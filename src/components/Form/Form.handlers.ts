@@ -1,6 +1,22 @@
 import { ERRORS } from "../../constants"
+import { BinTreeNode } from "../../tree/tree.interfaces"
 
-import { instanceOfBinTree, notAStringOrNumber } from "../../tree"
+function notAStringOrNumber(item: unknown) {
+  return typeof item !== "number" && typeof item !== "string"
+}
+
+function instanceOfBinTree(object: any): object is BinTreeNode {
+  if (typeof object !== "object") return false
+
+  return "id" in object
+}
+
+export const countItems = (arr: any[]): number => {
+  return arr.reduce(
+    (acc, curr) => acc + (Array.isArray(curr) ? countItems(curr) : 1),
+    0
+  )
+}
 
 export function validateFileContent(data: unknown) {
   try {
@@ -40,6 +56,7 @@ export async function getFileText(files: File[]) {
 }
 
 export async function validateNewFile(files: File[]) {
+  if (files.length === 0) return true
   try {
     const file = files[0]
     const data = await new Response(file).text()
